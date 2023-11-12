@@ -6,9 +6,8 @@ print('pid: ', pid)
 np = ops.getNP()
 print('np: ', np)
 ops.start()
-a = open('nps.txt', 'w')
-a.write(str(np))
-a.close()
+with open('nps.txt', 'w') as a:
+    a.write(str(np))
 if np < 2:
     exit()
 

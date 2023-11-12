@@ -40,30 +40,29 @@ defaultUnits("-force", "kip", "-length", "in", "-time", "sec", "-temp", "F")
 # ---------------
 
 # Set parameters for model geometry
-h  = 144.0;      # Story height
-by = 240.0;      # Bay width in Y-direction
-bx = 240.0;      # Bay width in X-direction
-
+h  = 144.0
+by = 240.0
+bx = 240.0
 # Create nodes
 #       tag    X        Y        Z 
 node( 1, -bx/2.0,  by/2.0, 0.0)
 node( 2,  bx/2.0,  by/2.0, 0.0)
-node( 3,  bx/2.0, -by/2.0, 0.0) 
+node( 3,  bx/2.0, -by/2.0, 0.0)
 node( 4, -bx/2.0, -by/2.0, 0.0) 
 
-node( 5, -bx/2.0,  by/2.0, h) 
-node( 6,  bx/2.0,  by/2.0, h) 
-node( 7,  bx/2.0, -by/2.0, h) 
+node( 5, -bx/2.0,  by/2.0, h)
+node( 6,  bx/2.0,  by/2.0, h)
+node( 7,  bx/2.0, -by/2.0, h)
 node( 8, -bx/2.0, -by/2.0, h) 
 
 node(10, -bx/2.0,  by/2.0, 2.0*h)
-node(11,  bx/2.0,  by/2.0, 2.0*h) 
-node(12,  bx/2.0, -by/2.0, 2.0*h) 
+node(11,  bx/2.0,  by/2.0, 2.0*h)
+node(12,  bx/2.0, -by/2.0, 2.0*h)
 node(13, -bx/2.0, -by/2.0, 2.0*h) 
 
-node(15, -bx/2.0,  by/2.0, 3.0*h) 
-node(16,  bx/2.0,  by/2.0, 3.0*h) 
-node(17,  bx/2.0, -by/2.0, 3.0*h) 
+node(15, -bx/2.0,  by/2.0, 3.0*h)
+node(16,  bx/2.0,  by/2.0, 3.0*h)
+node(17,  bx/2.0, -by/2.0, 3.0*h)
 node(18, -bx/2.0, -by/2.0, 3.0*h)
 
 # Retained nodes for rigid diaphragm
@@ -106,8 +105,8 @@ uniaxialMaterial("Concrete01", 1, -5.0, -0.005, -3.5, -0.02)
 uniaxialMaterial("Concrete01", 2, -fc, -0.002, 0.0, -0.006)
 
 # STEEL
-fy = 60.0;       # Yield stress
-Es = 30000.0;    # Young's modulus
+fy = 60.0
+Es = 30000.0
 # Reinforcing steel 
 #                              tag fy  E0  b
 uniaxialMaterial("Steel01", 3, fy, Es, 0.02)
@@ -203,7 +202,7 @@ p = 0.1*fc*h*h
 m = (4.0*p)/g
 
 # Rotary inertia of floor about retained node
-i = m*(bx*bx + by*by)/12.0
+i = m * (bx**2 + by**2) / 12.0
 
 # Set mass at the retained nodes
 #        tag MX MY MZ   RX   RY   RZ
