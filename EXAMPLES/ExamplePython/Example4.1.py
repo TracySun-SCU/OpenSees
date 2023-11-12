@@ -48,7 +48,7 @@ nodeID = 1
 # Define nodes
 for i in range(numBay+1):
     xDim = i * bayWidth
-    
+
     #         tag       X      Y
     node(nodeID,   xDim,   0.0)
     node(nodeID+1, xDim, 180.0, "-mass", m, m, 0.0)
@@ -71,8 +71,8 @@ uniaxialMaterial("Concrete01", 2, -5.0, -0.002, -0.0, -0.006)
 
 # STEEL
 # Reinforcing steel 
-fy = 60.0;      # Yield stress
-E = 30000.0;    # Young's modulus
+fy = 60.0
+E = 30000.0
 #                              tag fy  E0  b
 uniaxialMaterial("Steel01", 3, fy, E, 0.015)
 
@@ -90,7 +90,7 @@ patch("quad", 1,   1,   2,  11.5,  10.0,  11.5, -10.0,  13.5, -10.0,  13.5,  10.
 layer("straight", 3,   6,  1.56, -10.5,  9.0, -10.5, -9.0)
 layer("straight", 3,   6,  1.56,  10.5,  9.0,  10.5, -9.0)
 # define beam integration
-np = 4;  # number of integration points along length of element
+np = 4
 beamIntegration("Lobatto", 1, 1, np)
 
 # Exterior column section
@@ -127,15 +127,13 @@ for i in range(numBay+1):
     iNode = i*3 + 1
     jNode = i*3 + 2
 
-    for j in range(1, 3):
+    for _ in range(1, 3):
         # add the column element (secId == 2 if external, 1 if internal column)
-        if (i == 0):
-            element(eleType, beamID, iNode, jNode, 1, 2)
-        elif (i == numBay):
+        if i in [0, numBay]:
             element(eleType, beamID, iNode, jNode, 1, 2)
         else:
             element(eleType, beamID, iNode, jNode, 1, 1)
-        
+
         # increment the parameters
         iNode += 1
         jNode += 1
@@ -152,14 +150,14 @@ for j in range(1, 3):
     iNode = j + 1
     jNode = iNode + 3
 
-    for i in range(1, numBay+1):
+    for _ in range(1, numBay+1):
         element(eleType, beamID, iNode, jNode, 2, 3)
-        
+
         # increment the parameters
         iNode += 3
         jNode += 3
         beamID += 1
- 
+
 # Define gravity loads
 # --------------------
 # Constant gravity load
@@ -171,17 +169,14 @@ timeSeries("Linear", 1)
 # create a Plain load pattern
 pattern("Plain", 1, 1, "-fact", 1.0)
 
-# Create nodal loads at nodes 
+# Create nodal loads at nodes
 for i in range(numBay+1):
     # set some parameters
     node1 = i*3 + 2
     node2 = node1 + 1
-    
-    if (i == 0):
+
+    if i in [0, numBay]:
         load(node1, 0.0, P,     0.0) 
-        load(node2, 0.0, P/2.0, 0.0)
-    elif (i == numBay):
-        load(node1, 0.0, P,     0.0)
         load(node2, 0.0, P/2.0, 0.0)
     else:
         load(node1, 0.0, 2.0*P, 0.0)
@@ -296,7 +291,7 @@ record()
 
 # Perform the pushover analysis
 # Set some parameters
-maxU = 10.0;	        # Max displacement
+maxU = 10.0
 controlDisp = 0.0
 ok = analyze(1)
 while ((ok == 0) and (controlDisp < maxU)):

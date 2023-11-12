@@ -1,7 +1,7 @@
 import os
 import sys
-TEST_DIR = os.path.dirname(os.path.abspath(__file__)) + "/"
-INTERPRETER_PATH = TEST_DIR + "../interpreter/"
+TEST_DIR = f"{os.path.dirname(os.path.abspath(__file__))}/"
+INTERPRETER_PATH = f"{TEST_DIR}../interpreter/"
 sys.path.append(INTERPRETER_PATH)
 
 import opensees as opy
@@ -37,7 +37,7 @@ def test_recorder_time_step_can_handle_fp_precision():
     opy.recorder('Element', '-file', ele_rec_ffp, '-precision', 16, '-dT', rdt, '-rTolDt', 0.00001, '-time', '-ele', 1, 'force')
 
     opy.record()
-    for i in range(1100):
+    for _ in range(1100):
         opy.analyze(1, adt)
         opy.getTime()
     opy.wipe()

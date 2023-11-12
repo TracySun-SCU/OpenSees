@@ -43,7 +43,7 @@ class OpenSeesDependencies(ConanFile):
         self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
         cmake = self.configure_cmake()
         cmake.install()
-        self.copy("*", dst="bin", src=self._source_subfolder + "/applications")
+        self.copy("*", dst="bin", src=f"{self._source_subfolder}/applications")
 
     def package_info(self):
         self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))

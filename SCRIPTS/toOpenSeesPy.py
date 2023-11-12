@@ -80,10 +80,10 @@ def isfloat(value):
 #
 def toOpenSeesPy(infile, outfile, alias=''):
     # Add a dot if needed
-    if len(alias) > 0 and alias[-1] != '.':
-        alias = alias + '.'
-        
-    infile = open(infile,'r')
+  if len(alias) > 0 and alias[-1] != '.':
+    alias = f'{alias}.'
+
+  with open(infile,'r') as infile:
     for line in infile:
         info = line.split()
         N = len(info)
@@ -156,8 +156,6 @@ def toOpenSeesPy(infile, outfile, alias=''):
             else:
                 outfile.write(f",'{info[i]}'")
         if writeClose:
-            outfile.write(')\n')        
-    infile.close()
-
-    outfile.write('\n\n')
+            outfile.write(')\n')
+  outfile.write('\n\n')
     

@@ -22,12 +22,12 @@ bag_jobs = dict()
 def add_opensees_job(dax):
    
     # input files to the DAX-level replica catalog
-    input_files = list()
+    input_files = []
     names = ["Example3.1.tcl", "Example3.2.tcl"]
 
     for name in names:
         ifile = File(name)
-        ifile.addPFN(PFN("file://" + os.getcwd() + "/inputs/" + name, "local"))
+        ifile.addPFN(PFN(f"file://{os.getcwd()}/inputs/{name}", "local"))
         dax.addFile(ifile)
         input_files.append(ifile)
 
@@ -53,7 +53,7 @@ def add_plot_job(dax):
    
     # genPlot.m
     genPlot = File("genPlot.m")
-    genPlot.addPFN(PFN("file://" + os.getcwd() + "/inputs/genPlot.m", "local"))
+    genPlot.addPFN(PFN(f"file://{os.getcwd()}/inputs/genPlot.m", "local"))
     dax.addFile(genPlot)
 
     # job
@@ -72,7 +72,7 @@ def add_plot_job(dax):
 
     # add the file to the bag so we can look it up later
  #   bag_files[out_name] = f
-            
+
     dax.addJob(job)
 
     dax.depends(parent=bag_jobs["opensees"], child=job)
@@ -81,7 +81,7 @@ def add_plot_job(dax):
 # --- main ----------------------------------------------------------------------------
 
 # Configure command line option parser
-prog_usage = "usage: %s [options]" % (prog_base)
+prog_usage = f"usage: {prog_base} [options]"
 parser = optparse.OptionParser(usage=prog_usage)
 parser.add_option("-p", "--num-mat-props", action = "store", dest = "num_mat_props",
                   type="int", default = "1",

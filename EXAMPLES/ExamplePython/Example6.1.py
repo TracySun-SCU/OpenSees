@@ -46,14 +46,14 @@ Quad = "quad"
 #Quad = "enhancedQuad"
 
 thick = 2.0;
-nx = 10; # NOTE: nx MUST BE EVEN FOR THIS EXAMPLE
+nx = 10
 ny = 4
-bn = nx + 1 
+bn = nx + 1
 l1 = int(nx/2 + 1)
 l2 = int(l1 + ny*(nx+1))
 
 # now create the nodes and elements using the block2D command
-if (Quad == "quad" or Quad == "enhancedQuad"):
+if Quad in {"quad", "enhancedQuad"}:
     #          numX numY startNode startEle eleType eleArgs? coords?
     block2D(nx, ny, 1, 1,
                 Quad, thick, "PlaneStrain", 1,

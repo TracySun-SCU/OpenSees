@@ -22,12 +22,12 @@ bag_jobs = dict()
 def add_opensees_jobs(dax, num_materials, num_motions):
    
     # input files to the DAX-level replica catalog
-    input_files = list()
+    input_files = []
     names = ["model.tcl", "SteelWSections.tcl", "analyzeModel.tcl"]
 
     for name in names:
         ifile = File(name)
-        ifile.addPFN(PFN("file://" + os.getcwd() + "/inputs/" + name, "local"))
+        ifile.addPFN(PFN(f"file://{os.getcwd()}/inputs/{name}", "local"))
         dax.addFile(ifile)
         input_files.append(ifile)
 
@@ -36,7 +36,7 @@ def add_opensees_jobs(dax, num_materials, num_motions):
     for i in range(1, num_materials + 1):
         name = "matProperties.tcl.%d" % (i)
         mat_file[i] = File(name)
-        mat_file[i].addPFN(PFN("file://" + os.getcwd() + "/inputs/" + name, "local"))
+        mat_file[i].addPFN(PFN(f"file://{os.getcwd()}/inputs/{name}", "local"))
         dax.addFile(mat_file[i])
 
     # motion files
@@ -47,13 +47,13 @@ def add_opensees_jobs(dax, num_materials, num_motions):
 	    # tcl
         name = "motion.tcl.%d" % (i)
         mot_tcl_file[i] = File(name)
-        mot_tcl_file[i].addPFN(PFN("file://" + os.getcwd() + "/inputs/" + name, "local"))
+        mot_tcl_file[i].addPFN(PFN(f"file://{os.getcwd()}/inputs/{name}", "local"))
         dax.addFile(mot_tcl_file[i])
-	
+
         # dat
         name = "motion.dat.%d" % (i)
         mot_dat_file[i] = File(name)
-        mot_dat_file[i].addPFN(PFN("file://" + os.getcwd() + "/inputs/" + name, "local"))
+        mot_dat_file[i].addPFN(PFN(f"file://{os.getcwd()}/inputs/{name}", "local"))
         dax.addFile(mot_dat_file[i])
 
     # generate the jobs
@@ -72,26 +72,26 @@ def add_opensees_jobs(dax, num_materials, num_motions):
             job.uses(mat_file[n], link=Link.INPUT)
             job.uses(mot_tcl_file[m], link=Link.INPUT)
             job.uses(mot_dat_file[m], link=Link.INPUT)
-            
-            out_name = "NodeDisp.out.%s" % (w)
+
+            out_name = f"NodeDisp.out.{w}"
             f1 = File(out_name)
             job.uses(f1, link=Link.OUTPUT)
             # add the file to the bag so we can look it up later
             bag_files[out_name] = f1
 
-            out_name = "NodeAccel.out.%s" % (w)
+            out_name = f"NodeAccel.out.{w}"
             f2 = File(out_name)
             job.uses(f2, link=Link.OUTPUT)
             # add the file to the bag so we can look it up later
             bag_files[out_name] = f2
 
-            out_name = "NodeReaction.out.%s" % (w)
+            out_name = f"NodeReaction.out.{w}"
             f3 = File(out_name)
             job.uses(f3, link=Link.OUTPUT)
             # add the file to the bag so we can look it up later
             bag_files[out_name] = f3
 
-            out_name = "NodeDrift.out.%s" % (w)
+            out_name = f"NodeDrift.out.{w}"
             f4 = File(out_name)
             job.uses(f4, link=Link.OUTPUT)
             # add the file to the bag so we can look it up later
@@ -99,7 +99,7 @@ def add_opensees_jobs(dax, num_materials, num_motions):
 
             dax.addJob(job)
             # add the job to the bag so we can look it up later
-            bag_jobs["opensees_%s" % (w)] = job
+            bag_jobs[f"opensees_{w}"] = job
 
             # parents to this job
             #dax.depends(parent=bag_jobs["motion_job"], child=job)
@@ -109,16 +109,16 @@ def add_plot_job(dax, num_materials, num_motions):
    
     # genPlot.m
     genPlot = File("genPlot.m")
-    genPlot.addPFN(PFN("file://" + os.getcwd() + "/inputs/genPlot.m", "local"))
+    genPlot.addPFN(PFN(f"file://{os.getcwd()}/inputs/genPlot.m", "local"))
     dax.addFile(genPlot)
 
     xTicks = File("setXTicks.m")
-    xTicks.addPFN(PFN("file://" + os.getcwd() + "/inputs/setXTicks.m", "local"))
+    xTicks.addPFN(PFN(f"file://{os.getcwd()}/inputs/setXTicks.m", "local"))
 #    dax.addFile(setXTicks)
     dax.addFile(xTicks)
 #    dax.addFile(genPlot)
 
-   
+
     # job
     job = Job(namespace="system", name="octave", version="1.0")
 
@@ -134,13 +134,13 @@ def add_plot_job(dax, num_materials, num_motions):
     for n in range(1, num_materials + 1):
         for m in range(1, num_motions + 1):
             w = "%d.%d" %(n, m)
-            node_file = bag_files["NodeDisp.out.%s" % (w)]
+            node_file = bag_files[f"NodeDisp.out.{w}"]
             job.uses(node_file, link=Link.INPUT)
-            node_file = bag_files["NodeAccel.out.%s" % (w)]
+            node_file = bag_files[f"NodeAccel.out.{w}"]
             job.uses(node_file, link=Link.INPUT)
-            node_file = bag_files["NodeDrift.out.%s" % (w)]
+            node_file = bag_files[f"NodeDrift.out.{w}"]
             job.uses(node_file, link=Link.INPUT)
-            node_file = bag_files["NodeReaction.out.%s" % (w)]
+            node_file = bag_files[f"NodeReaction.out.{w}"]
             job.uses(node_file, link=Link.INPUT)
 
 
@@ -155,20 +155,20 @@ def add_plot_job(dax, num_materials, num_motions):
 
     # add the file to the bag so we can look it up later
  #   bag_files[out_name] = f
-            
+
     dax.addJob(job)
 
     # parent jobs
     for n in range(1, num_materials + 1):
         for m in range(1, num_motions + 1):
             w = "%d.%d" %(n, m)
-            dax.depends(parent=bag_jobs["opensees_%s" % (w)], child=job)
+            dax.depends(parent=bag_jobs[f"opensees_{w}"], child=job)
 
 
 # --- main ----------------------------------------------------------------------------
 
 # Configure command line option parser
-prog_usage = "usage: %s [options]" % (prog_base)
+prog_usage = f"usage: {prog_base} [options]"
 parser = optparse.OptionParser(usage=prog_usage)
 parser.add_option("-p", "--num-mat-props", action = "store", dest = "num_mat_props",
                   type="int", default = "1",
